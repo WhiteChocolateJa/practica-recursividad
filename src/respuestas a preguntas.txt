@@ -1,0 +1,364 @@
+/*
+
+Ejercicio #1:
+
+TAREA #1:
+factorial(5)
+  |--> 5 * factorial(4)        ← espera resultado de factorial(4)
+        |--> 4 * factorial(3)  ← espera resultado de factorial(3)
+              |--> 3 * factorial(2)  ← espera resultado de factorial(2)
+                    |--> 2 * factorial(1)  ← espera resultado de factorial(1)
+                          |--> devuelve 1  ← caso base
+
+Lo que queda pendiente en cada nivel es la multiplicación con el factorial
+del numero anterior. Por ejemplo, factorial(5) no puede calcular 5 * ? hasta
+que factorial(4) le devuelva su resultado. Cada llamada queda "congelada" en la
+pila esperando que la siguiente termine.
+
+TAREA #2:
+Porque en cada llamada solo se hace una llamada recursiva, no dos
+ni más. El problema se reduce de factorial(n) a factorial(n-1),
+una sola vez por nivel. En cambio Fibonacci llama a fibonacci(n-1)
+y a fibonacci(n-2) al mismo tiempo, lo que crea dos ramas en cada
+nivel y forma un árbol. Aquí la cadena es lineal: un solo nivel lleva
+al siguiente.
+
+TAREA #3:
+La recurrencia temporal es:
+T(n) = T(n-1) + O(1)
+T(1) = O(1)
+
+Esto significa que para calcular factorial(n), se hace una llamada
+recursiva a factorial(n-1) más un trabajo constante
+(la multiplicación n * resultado). Ese trabajo constante no cambia sin
+importar el valor de n.
+
+En BigO la complejidad temporal es O(n), porque el problema se reduce
+en 1 en cada llamada, lo que produce exactamente n llamadas.
+En cada una se hace solo una multiplicación, que es O(1).
+En total: n * O(1) = O(n).
+
+En BigO la complejidad espacial también es es O(n), Porque cada llamada
+queda guardada en la pila de ejecución esperando su resultado.
+Cuando se llama factorial(5), hay 5 llamadas activas al mismo tiempo
+en memoria. La pila crece un nivel por cada llamada, entonces su
+tamaño máximo es n.
+
+TAREA #4:
+En forma iterativa la complejidad temporal sigue siendo O(n), porque el bucle depende
+de n, si n = 1,000,000 entonces va a haber 999,999 iteraciones. Entonces
+el tiempo crece linealmente.
+
+La complejidad espacial de la versión iterativa es O(1) porque
+solo utiliza un número fijo de variables, independientemente
+del tamaño de la entrada, y no genera estructuras adicionales
+en memoria como la pila de llamadas.
+
+El costo que desaparece es el espacio en la pila de llamadas.
+La versión iterativa solo necesita una variable sin
+importar qué tan grande sea n.
+
+
+TAREA #5:
+¿Cómo funciona?
+La función recibe dos cosas, el número n y un acumulador
+que guarda el resultado. En cada paso, en vez de esperar para
+multiplicar después, multiplica de una vez el acumulador
+por n y pasa ese nuevo resultado a la siguiente llamada
+con n-1. Esto se repite hasta que n llega a 1, y en ese momento
+la función devuelve el acumulador, que ya tiene el factorial completo.
+
+¿Por qué Java no garantiza la optimización?
+Aunque la función está escrita como recursividad de cola (porque
+la llamada recursiva es lo último que se hace y no quedan
+operaciones pendientes), en Java no se garantiza una optimización
+automática de estas llamadas. Esto significa que cada llamada
+recursiva aún se guarda en la pila de ejecución, acumulando memoria
+a medida que n crece. Por eso, a pesar de la mejora en la forma del
+algoritmo, el uso de espacio sigue siendo O(n) y no O(1).
+
+
+TAREA #6:
+Preferiría la versión recursiva cuando el objetivo es que el código
+sea fácil de leer y de entender, especialmente en equipos donde la
+claridad importa más que el rendimiento. Por ejemplo, si estoy
+escribiendo código educativo o un prototipo rápido, la versión
+recursiva refleja directamente la definición matemática del
+factorial que es esta: n! = n * (n-1)!, lo que hace que cualquier
+persona pueda leerlo y entender la lógica sin seguir un loop
+manualmente. Si el valor de n es pequeño y no hay riesgo de
+desbordamiento de pila, el costo extra en memoria no es un
+problema real.
+
+
+
+
+
+
+
+
+
+Ejercicio #2:
+
+TAREA #7:
+Los marcados con (*) son subproblemas que aparecen más de una vez:
+fib(6)
+|--> fib(5)
+│   |--> fib(4)
+│   │   ├--> fib(3)*
+│   │   │   ├--> fib(2)*
+│   │   │   │   ├--> fib(1)
+│   │   │   │   └--> fib(0)
+│   │   │   └--> fib(1)
+│   │   └--> fib(2)*
+│   │       ├--> fib(1)
+│   │       └--> fib(0)
+│   └--> fib(3)*
+│       ├--> fib(2)*
+│       │   ├--> fib(1)
+│       │   └--> fib(0)
+│       └--> fib(1)
+└--> fib(4)*
+    ├--> fib(3)*
+    │   ├--> fib(2)*
+    │   │   ├--> fib(1)
+    │   │   └--> fib(0)
+    │   └--> fib(1)
+    └--> fib(2)*
+        ├--> fib(1)
+        └--> fib(0)
+
+TAREA #8:
+El problema no es que la función se llame a sí misma, sino que cada
+vez que necesita un valor ya calculado, lo vuelve a calcular desde
+cero. Por ejemplo, cuando fib(6) necesita fib(4), lo calcula completo.
+Pero fib(5) también necesita fib(4) y lo vuelve a calcular completo,
+sin saber que ya se hizo antes. La recursión por sí sola no es cara,
+lo caro es ese trabajo duplicado que se acumula en cada nivel del árbol.
+
+TAREA #9:
+1. fib(4) se calcula 2 veces:
+Una vez desde fib(6) y otra desde fib(5). Cada una de esas llamadas
+despliega su propio subárbol completo con fib(3), fib(2), etc.
+
+2. fib(3) se calcula 3 veces:
+Aparece bajo fib(5), bajo fib(4) (primera vez) y bajo fib(4)
+(segunda vez). Cada repetición vuelve a generar sus dos ramas hijas.
+
+3. fib(2) se calcula 5 veces:
+Es el subproblema más repetido. Cada vez que aparece genera dos
+llamadas más (fib(1) y fib(0)), que aunque son el caso base,
+igual suman trabajo al total.
+
+¿Por qué esto lleva a crecimiento exponencial?
+Cada nivel del árbol aproximadamente duplica el número de llamadas,
+porque cada nodo genera dos hijos. Las repeticiones no detienen ese
+crecimiento, en lugar de reutilizar un resultado,
+vuelven a abrir todo el subárbol. Esto hace que el total de
+llamadas crezca siguiendo la proporción de la misma, lo que
+resulta en una complejidad de O(2^n) en tiempo.
+
+TAREA #10:
+Con la versión ingenua, cada subproblema se recalcula tantas veces
+como aparece en el árbol. Con la memorización, la primera vez que
+se calcula un valor se guarda en una tabla, y las siguientes
+veces que se necesita simplemente se consulta esa tabla en O(1)
+sin abrir ningún subárbol.
+
+El tiempo baja de O(2^n) a O(n) porque cada uno de los n subproblemas
+distintos se resuelve exactamente una vez. El espacio sigue siendo
+O(n) porque la pila de llamadas sigue creciendo hasta profundidad n,
+además de la tabla donde se guardan los resultados.
+
+TAREA #11:
+La versión recursiva piensa de arriba hacia abajo: parte de fib(n)
+y lo descompone en subproblemas más pequeños hasta llegar al caso
+base. El programa descubre qué subproblemas necesita a medida que
+los encuentra.
+
+La tabulación iterativa piensa de abajo hacia
+arriba: empieza desde fib(0) y fib(1) y construye los resultados
+hacia adelante hasta llegar a fib(n).
+El programador decide de antemano el orden de resolución,
+eliminando por completo la pila de llamadas.
+
+
+El cambio no es solo de sintaxis. En la versión de arriba hacia
+abajo la solución se descubre durante la ejecución. En la versión
+de abajo hacia arriba la solución se construye en orden, sin depender
+del stack ni riesgo de desbordamiento.
+
+
+TAREA #12:
+Usaría la tabulación con tabla precalculada antes de responder
+cualquier consulta. Porque si cada consulta usa
+su propia memorización, sigue reconstruyendo la tabla desde cero
+en cada llamada independiente. Lo que desaparece con la tabla
+precalculada es todo el trabajo repetido entre consultas distintas,
+no solo dentro de una. Cada valor de Fibonacci se calcula exactamente
+una vez en toda la ejecución del programa, y cada consulta posterior
+es simplemente una búsqueda directa en O(1). Ni la versión ingenua
+ni la memorización por separado logran eso.
+
+
+
+
+
+
+
+
+
+Ejercicio #3
+
+
+TAREA #13
+
+hanoi(3, A, B, C)
+hanoi(2, A, C, B)
+hanoi(1, A, B, C) → A -> C
+A -> B
+hanoi(1, C, A, B) → C -> B
+A -> C  ← movimiento del disco más grande
+hanoi(2, B, A, C)
+hanoi(1, B, C, A) → B -> A
+B -> C
+hanoi(1, A, B, C) → A -> C
+
+Movimientos en orden: A→C, A→B, C→B, A→C, B→A, B→C, A→C
+El movimiento central (A→C) mueve el disco más grande directamente
+a su destino final. Todo lo que ocurre antes es mover los n-1 discos
+encima fuera del camino, y todo lo que ocurre después es volver a
+apilarlos sobre el disco grande. Esos dos bloques son estructuralmente
+idénticos pero con los postes en diferente rol, de ahí la simetría.
+
+TAREA #14
+
+Recurrencia del número mínimo de movimientos:
+M(n) = 2M(n-1) + 1
+M(1) = 1
+Desarrollo:
+M(2) = 2(1) + 1 = 3
+M(3) = 2(3) + 1 = 7
+M(4) = 2(7) + 1 = 15
+se observa que:
+1 = 2^1 - 1
+3 = 2^2 - 1
+7 = 2^3 - 1
+15 = 2^4 - 1
+Forma cerrada:
+M(n) = 2^n - 1
+
+
+TAREA #15
+En Fibonacci el crecimiento exponencial viene de recalcular
+subproblemas que ya fueron resueltos antes. En Hanoi no hay ningún
+subproblema repetido: cada llamada representa un movimiento o un
+grupo de movimientos que son físicamente obligatorios. No se puede
+mover el disco más grande sin haber movido los n-1 discos encima,
+y eso cuesta exactamente M(n-1) movimientos cada vez. El exponencial
+aquí no es un defecto del algoritmo sino una propiedad del problema
+mismo.
+
+TAREA #16
+Cualquier solución correcta, iterativa o recursiva, debe realizar los
+2^n-1 movimientos mínimos. Esto no es una limitación de la
+implementación sino una restricción del problema: cada disco debe
+moverse al menos una vez y las reglas determinan cuándo puede hacerlo.
+Cambiar la implementación a iterativa puede eliminar el costo de la
+pila de llamadas, pero no puede reducir el número de movimientos
+porque ese número es matemáticamente inevitable.
+
+
+TAREA #17
+En la versión recursiva, cada marco de llamada guarda tres cosas:
+cuántos discos mover (n), desde dónde (origen), y hacia dónde (destino),
+con cuál es el auxiliar. La estrategia iterativa simula exactamente
+eso con una pila explícita:
+
+Se crea una pila de tareas. Cada tarea almacena los mismos cuatro
+datos que el marco recursivo: (n, origen, auxiliar, destino).
+En lugar de hacer una llamada recursiva, se apilan las subtareas en
+el orden inverso al que deben ejecutarse. Cuando n == 1, en lugar de
+llamar a la función se imprime el movimiento directamente.
+
+El punto clave no es que sea más rápida, sino que demuestra que la
+recursión no hace nada mágico: solo administra una pila de pendientes,
+y eso mismo se puede manejar manualmente.
+
+TAREA #18
+Si el objetivo es únicamente contar, no hace falta simular ningún
+movimiento. La forma cerrada ya demostró que la respuesta es siempre
+ 2^n - 1, así que basta con calcularlo directamente:
+
+ public static long contarHanoi(int n) {
+     long resultado = 1;
+
+     for (int i = 0; i < n; i++) {
+         resultado = resultado * 2;
+     }
+
+     return resultado - 1;
+ }
+
+ Cuando el objetivo cambia, el problema cambia. Imprimir cada movimiento obliga a simularlos todos.
+ Contar cuántos hay es simplemente evaluar una fórmula.
+
+TAREA #19
+Un algoritmo está mal diseñado cuando hace trabajo innecesario,
+como Fibonacci recalculando subproblemas. Hanoi es O(2^n) pero no
+hace ningún trabajo innecesario: cada una de las 2^n-1 llamadas
+corresponde a un movimiento que no puede evitarse. La complejidad
+exponencial refleja la dificultad real del problema, no un error
+del programador. Esto enseña que O(2^n) no siempre significa que
+hay algo que optimizar; a veces significa que el problema mismo es
+así de costoso.
+
+TAREA #20
+El fragmento original se reduce de n a n-1 en cada llamada, haciendo
+exactamente n llamadas. Es O(n). La idea de la exponenciación rápida
+es que si n es par, x^n = x^(n/2) * x^(n/2), entonces el problema se
+divide a la mitad en cada llamada en lugar de reducirse en uno.
+Eso cambia la profundidad de n niveles a log(base2)(n) niveles.
+
+EN el original el tiempo es O(n) , en el de exponenciacion rapida es O(log n)
+EN el original el espacio es O(n) , en el de exponenciacion rapida es O(log n)
+
+El cambio clave es guardar mitad en una variable y reutilizarla.
+Si se escribiera potenciaRapida(x, n/2) * potenciaRapida(x, n/2)
+sin guardarla, se harían dos llamadas por nivel y el beneficio
+desaparecería.
+
+TAREA #21
+La función parece O(n) por tener n llamadas, pero en Java cada
+concatenación de Strings copia todos los caracteres acumulados
+hasta ese punto. El total de copias es 1 + 2 + ... + n, lo que
+da un costo real de O(n²).
+
+La solución usa un bucle que recorre la cadena desde el último
+carácter hasta el primero, concatenando cada uno en una variable
+resultado. Esto elimina la recursión y la pila de llamadas,
+reduciendo el espacio a O(1). El tiempo sigue siendo O(n²) por
+las concatenaciones, pero ya no hay el costo adicional de crear
+subcadenas en cada llamada. El código está en el main.
+
+TAREA #22
+El fragmento recorre el arreglo completo una vez,
+haciendo exactamente n llamadas. Es O(n) en tiempo y O(n) en espacio
+por la pila de llamadas.
+
+El tiempo no mejora porque en ambos casos hay que revisar cada
+elemento exactamente una vez. No existe atajo para contar:
+el trabajo mínimo es n operaciones.
+
+¿Vale la pena cambiarlo siempre?
+No siempre. Si el arreglo es pequeño, la diferencia de memoria es
+insignificante. Tiene sentido cambiarlo cuando el arreglo puede ser
+muy grande y existe riesgo real de desbordamiento de pila, o cuando
+el sistema tiene memoria limitada. Si el código recursivo es más
+claro para quien lo lee y el tamaño del arreglo es controlado, la
+versión iterativa no aporta ninguna ventaja real.
+
+
+NOTA: algunas tareas que llevan codigo, estan en el main.
+
+*/
