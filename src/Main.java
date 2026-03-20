@@ -1,32 +1,32 @@
 
 void main() {
     // Prueba factorial iterativo
-    IO.println("=== Factorial Iterativo ===");
+    IO.println("Factorial Iterativo");
     IO.println("factorial(5) = " + factorial(5));
     IO.println("factorial(10) = " + factorial(10));
 
     // Prueba factorial de cola
-    IO.println("\n=== Factorial Cola ===");
+    IO.println("\nFactorial Cola");
     IO.println("factorialCola(5) = " + factorialCola(5, 1));
     IO.println("factorialCola(10) = " + factorialCola(10, 1));
 
     // Prueba contar movimientos Hanoi
-    IO.println("\n=== Hanoi: contar movimientos ===");
+    IO.println("\nHanoi: contar movimientos");
     IO.println("Hanoi con 3 discos = " + contarHanoi(3) + " movimientos");
     IO.println("Hanoi con 5 discos = " + contarHanoi(5) + " movimientos");
 
     // Prueba potencia rapida
-    IO.println("\n=== Potencia Rapida ===");
+    IO.println("\nPotencia Rapida");
     IO.println("2^10 = " + potenciaRapida(2, 10));
     IO.println("3^5 = " + potenciaRapida(3, 5));
 
     // Prueba invertir cadena
-    IO.println("\n=== Invertir Cadena ===");
+    IO.println("\nInvertir Cadena");
     IO.println("invertir('hola') = " + invertir("hola"));
     IO.println("invertir('recursion') = " + invertir("recursion"));
 
     // Prueba contar unos
-    IO.println("\n=== Contar Unos ===");
+    IO.println("\nContar Unos");
     int[] arreglo1 = {1, 0, 1, 1, 0, 1};
     int[] arreglo2 = {0, 0, 1, 0, 1, 0};
     IO.println("arreglo {1,0,1,1,0,1} tiene " + contarUnosIterativo(arreglo1) + " unos");
